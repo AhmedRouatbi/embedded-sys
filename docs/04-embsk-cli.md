@@ -20,7 +20,7 @@ All commands act on the **project root**: the nearest directory (cwd or a parent
 | `embsk doctor` | validate profile vs Zephyr tree and tools (table below) | — | 1 if any ERR |
 | `embsk render` | rewrite the managed block in AGENTS.md | AGENTS.md, CLAUDE.md | 0 |
 | `embsk commands` | print the generated command table | — | 0 |
-| `embsk scaffold` | copy the platform template into the project (never overwrites); Zephyr: re-render | template files, `docs/SPEC.md` | 0 |
+| `embsk scaffold` | copy the platform template into the project (never overwrites); Zephyr: re-render | template files, `docs/SPEC.md`, `docs/safety/*.md` (safety ≠ none) | 0 |
 | `embsk setup [--no-build]` | Zephyr workspace automation (see [05](05-zephyr-workspace.md)); uses the Zephyr SDK from PATH, never installs it | `app/west.yml`, `.west/`, `deps/`, maybe `.venv/`, `build/` | 0 ok · 1 board not found · 2 not Zephyr / app_dir "." · 3 Zephyr SDK not on PATH (prints the fix line) · build's exit code · `SystemExit` message if a west/pip command fails |
 | `embsk modules` | print the west modules the board + features need; notes on stderr | — | 1 if board unknown / no tree |
 | `embsk export [build-dir]` | run `export-zephyr-context.sh`: resolved `zephyr.dts`, DT macros, `.config`, `autoconf.h`, map, linker script, size report, node/status index, `runners.yaml` → `docs/generated/` | `docs/generated/*` | script's code |

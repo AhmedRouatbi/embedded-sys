@@ -47,6 +47,7 @@
 | `artifacts/*.txt` | log captures, `embsk verify` | agent (grep) | `.txt`, not `.log` |
 | `docs/generated/*` | `embsk export` | agent, graphify | resolved DTS/Kconfig/map |
 | `docs/SPEC.md`, `docs/PLAN.md`, `docs/adr/` | agent (from templates) | agent, humans | process artifacts |
+| `docs/safety/*.md` | `embsk scaffold` when safety ≠ none, then agent drafts | agent, `fw-safety`, humans (owners) | SRS, hazards, architecture, deviations, verification (`safety.md`) |
 
 ## Repository file map
 
@@ -85,6 +86,7 @@ embeddedSysSk/
         ├── zephyr-app/             gitignore, graphifyignore, app/{west.yml, CMakeLists.txt, prj.conf, src/main.cpp}
         ├── baremetal/              gitignore, graphifyignore, app/{CMakeLists.txt, cmake/arm-none-eabi.cmake, src/, tests/}
         ├── SPEC.md, ADR.md, CONSTRAINTS.md
+        ├── safety/                 SRS, hazards, architecture, deviations, verification → project docs/safety/ (safety ≠ none)
 ```
 
 Templates store `gitignore` and `graphifyignore` without the leading dot so they don't affect the skill repo. `embsk scaffold` renames them to `.gitignore`/`.graphifyignore`, and maps the template's `app/` to the profile's `app_dir`.

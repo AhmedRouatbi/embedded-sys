@@ -16,7 +16,7 @@ One file, stdlib only, shared by every agent front-end:
   embsk commands          print build/test/flash/log commands for this profile
   embsk export [build]    export resolved DTS/Kconfig/map for graphify (Zephyr)
   embsk verify            run build + host tests, write artifacts/verify.txt
-  embsk scaffold          copy the platform template (never overwrites) + docs/SPEC.md
+  embsk scaffold          copy the platform template (never overwrites) + docs/SPEC.md (+ docs/safety/ if safety set)
   embsk setup [--no-build]
                           Zephyr: scaffold if needed, sync app/west.yml (revision + module allowlist
                           for the board), west init -l, west update (shallow), Python deps, Zephyr SDK
@@ -1298,6 +1298,8 @@ def main(argv):
         to_app = lambda r: Path(app, *r.parts[1:]) if r.parts[0] == "app" else r  # template's app/ -> profile app_dir
         pairs = [(f, root() / to_app(dot(f.relative_to(tpl)))) for f in sorted(tpl.rglob("*")) if f.is_file()]
         pairs.append((HERE.parent / "templates" / "SPEC.md", root() / "docs" / "SPEC.md"))
+        if prof["safety"] != "none":
+            pairs += [(f, root() / "docs" / "safety" / f.name) for f in sorted((HERE.parent / "templates" / "safety").glob("*.md"))]
         for src, dst in pairs:
             if dst.exists():
                 print(f"skip   {dst.relative_to(root())} (exists)")

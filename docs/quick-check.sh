@@ -198,9 +198,11 @@ newproj
 "${EMBSK[@]}" set platform=zephyr board=nucleo_f767zi >/dev/null 2>&1; "${EMBSK[@]}" scaffold >/dev/null 2>&1
 check "zephyr template in app/" test -f app/west.yml -a -f app/src/main.cpp -a -f app/CMakeLists.txt -a -f .gitignore -a -f .graphifyignore
 has "AGENTS.md has workspace line" "West workspace" cat AGENTS.md
+refuse "no docs/safety/ when safety=none" test -e docs/safety
 newproj
-"${EMBSK[@]}" set platform=baremetal mcu=STM32F767ZI tests=unity >/dev/null 2>&1; "${EMBSK[@]}" scaffold >/dev/null 2>&1
+"${EMBSK[@]}" set platform=baremetal mcu=STM32F767ZI tests=unity safety=iec61508 safety_level=SIL2 coding_standard=misra-c-2012 >/dev/null 2>&1; "${EMBSK[@]}" scaffold >/dev/null 2>&1
 check "bare-metal template in app/" test -f app/CMakeLists.txt -a -f app/tests/test_build_info.c -a -f app/cmake/arm-none-eabi.cmake
+check "safety templates in docs/safety/ when safety set" test -f docs/safety/SRS.md -a -f docs/safety/hazards.md -a -f docs/safety/architecture.md -a -f docs/safety/deviations.md -a -f docs/safety/verification.md
 refuse "setup refuses bare metal" "${EMBSK[@]}" setup
 
 hdr "flash guard (pure bash: Linux, macOS, Git Bash on Windows)"

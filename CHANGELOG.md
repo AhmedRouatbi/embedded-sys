@@ -2,6 +2,11 @@
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) · versions: [SemVer](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+- Safety templates (`templates/safety/`: SRS, hazards, architecture, deviations, verification). `embsk scaffold` copies them to the project's `docs/safety/` when `safety ≠ none`, and never overwrites.
+
 ## [1.0.0] - 2026-10-26
 
 First public release.

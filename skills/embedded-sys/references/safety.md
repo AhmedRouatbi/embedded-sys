@@ -19,6 +19,8 @@ Every change touching a safety function is tier **T2**: spec'd (SR-n), reviewed 
 
 ## Lifecycle artifacts the agent can draft (human-owned)
 
+These files live in the **firmware project**, not in the skill. When `safety ≠ none`, `embsk scaffold` copies them from `templates/safety/` and never overwrites existing ones. If safety was set after the project was scaffolded, run `embsk scaffold` again.
+
 | Artifact | File | Agent's job |
 |---|---|---|
 | Safety requirements `SR-n` (with level, safe state, reaction time) | `docs/safety/SRS.md` | derive from hazards; each testable |
@@ -32,8 +34,8 @@ Every change touching a safety function is tier **T2**: spec'd (SR-n), reviewed 
 Hazard table (FMEA-lite):
 
 ```
-| Function | Failure mode | Effect | Sev | Detection | Mechanism / safe state | Reaction time | SR |
-| Heater control | output stuck on | overheat | 4 | temp > limit, plausibility vs. 2nd sensor | cut relay via independent GPIO, latch fault | < 500 ms | SR-3 |
+| ID | Function | Failure mode | Effect | Sev | Detection | Mechanism / safe state | Reaction time | SR |
+| H-1 | Heater control | output stuck on | overheat | 4 | temp > limit, plausibility vs. 2nd sensor | cut relay via independent GPIO, latch fault | < 500 ms | SR-3 |
 ```
 
 ## Coding standard — what agents must do
