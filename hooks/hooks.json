@@ -1,0 +1,13 @@
+{
+  "description": "embedded-sys: profile context at session start; confirm before flash/erase/lock/option-byte operations and secret-file access.",
+  "hooks": {
+    "SessionStart": [
+      { "matcher": "startup|resume|clear|compact",
+        "hooks": [ { "type": "command", "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/session-start.sh\"", "timeout": 10 } ] }
+    ],
+    "PreToolUse": [
+      { "matcher": "Bash|PowerShell|Read|Write|Edit|MultiEdit|shell|exec_command|local_shell",
+        "hooks": [ { "type": "command", "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/flash-guard.sh\"", "timeout": 10 } ] }
+    ]
+  }
+}

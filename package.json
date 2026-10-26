@@ -1,0 +1,17 @@
+{
+  "name": "embedded-sys",
+  "version": "1.0.0",
+  "description": "embedded-sys for Pi: Alt+A profile menu, /embsk, status, flash-guard gate. The skill itself comes from ~/.agents/skills (install.py).",
+  "license": "MIT",
+  "keywords": [
+    "pi-package",
+    "embedded",
+    "zephyr",
+    "firmware"
+  ],
+  "pi": {
+    "extensions": [
+      "./pi-extension/index.ts"
+    ]
+  }
+}

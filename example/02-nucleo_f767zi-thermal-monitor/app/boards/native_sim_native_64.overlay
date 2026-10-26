@@ -1,0 +1,48 @@
+/*
+ * SIL target (software in the loop): the same application on native_sim, with simulated devices
+ * behind the same Zephyr APIs the hardware shell uses (sensor, watchdog, GPIO). monitor.c runs
+ * unchanged; the shell command `sim ...` (src/sim/sim_shell.c) drives the devices.
+ * Evidence level: L2 (host). It does not replace the on-target run (L4).
+ * native_sim's base DTS already has led0 on gpio0 pin 0 (green).
+ * File name = the profile's host_board native_sim/native/64; Zephyr has no fallback to native_sim.overlay.
+ */
+/ {
+	aliases {
+		led1 = &sim_led_blue;
+		led2 = &sim_led_red;
+		sw0 = &sim_button;
+		die-temp0 = &sim_temp;
+		watchdog0 = &sim_wdt;
+	};
+
+	sim_temp: sim-temp {
+		compatible = "vnd,sim-temp";
+		status = "okay";
+	};
+
+	sim_wdt: sim-wdt {
+		compatible = "vnd,sim-wdt";
+		status = "okay";
+	};
+
+	sim-buttons {
+		compatible = "gpio-keys";
+
+		sim_button: button_0 {
+			gpios = <&gpio0 3 GPIO_ACTIVE_HIGH>;
+			label = "B1 (simulated)";
+		};
+	};
+};
+
+&leds {
+	sim_led_blue: led_1 {
+		gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
+		label = "LD2 blue (simulated)";
+	};
+
+	sim_led_red: led_2 {
+		gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
+		label = "LD3 red (simulated)";
+	};
+};

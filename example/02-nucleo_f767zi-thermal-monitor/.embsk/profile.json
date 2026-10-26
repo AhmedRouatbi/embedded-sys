@@ -1,0 +1,28 @@
+{
+  "platform": "zephyr",
+  "board": "nucleo_f767zi",
+  "mcu": "",
+  "app_dir": "app",
+  "zephyr_rev": "v4.4.2",
+  "extra_modules": [],
+  "host_board": "native_sim/native/64",
+  "core": "auto",
+  "toolchain": "zephyr-sdk",
+  "build": "cmake",
+  "elf": "build/app.elf",
+  "debugger": "stlink",
+  "log": "uart",
+  "serial_port": "/dev/ttyACM0",
+  "tests": "ztest",
+  "hil": "board",
+  "safety": "none",
+  "safety_level": "-",
+  "coding_standard": "none",
+  "features": [
+    "sensors"
+  ],
+  "ponytail": "full",
+  "graphify": true,
+  "subagents": true,
+  "autocommit": false
+}

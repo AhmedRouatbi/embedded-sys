@@ -1,0 +1,8 @@
+description: |
+  Simulated watchdog for the SIL build (native_sim only). Implements the watchdog API with a
+  kernel timer: when it is not fed in time it logs "watchdog expired" (where a real IWDG would
+  reset the MCU). Driver: src/sim/sim_devices.c.
+
+compatible: "vnd,sim-wdt"
+
+include: base.yaml

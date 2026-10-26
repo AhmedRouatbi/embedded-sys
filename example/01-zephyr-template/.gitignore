@@ -1,0 +1,13 @@
+# west workspace - recreated by `embsk setup` (west init -l app + west update)
+.west/
+deps/
+.venv/
+# build output
+build*/
+twister-out*/
+artifacts/*.txt
+graphify-out/cache/
+# secrets
+*.pem
+*.key
+.env

@@ -1,0 +1,29 @@
+name: check
+on:
+  push:
+  pull_request:
+
+jobs:
+  linux:
+    name: quick-check (Linux)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: "offline self-test (no Zephyr tree on the runner, so those checks are skipped)"
+        run: bash docs/quick-check.sh
+
+  windows:
+    name: install + check (Windows)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: "install.py into a throw-away user profile, then --check (smoke tests incl. the flash guard in Git Bash)"
+        shell: pwsh
+        run: |
+          $h = Join-Path $env:RUNNER_TEMP "home"
+          New-Item -ItemType Directory -Force $h | Out-Null
+          $env:USERPROFILE = $h
+          py -3 install.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          py -3 install.py --check
+          exit $LASTEXITCODE

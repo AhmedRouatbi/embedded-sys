@@ -1,0 +1,14 @@
+# West manifest. This folder is the manifest repo; the west workspace is its parent folder.
+# `embsk setup` keeps `revision` and `name-allowlist` in sync with the board chosen with Alt+A,
+# so `west update` fetches Zephyr + only the modules this board needs (not all ~60 of them).
+manifest:
+  version: "1.0"
+  projects:
+    - name: zephyr
+      url: https://github.com/zephyrproject-rtos/zephyr
+      revision: v4.4.2
+      import:
+        path-prefix: deps
+        name-allowlist:
+          - cmsis_6
+          - hal_stm32

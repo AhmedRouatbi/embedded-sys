@@ -1,0 +1,14 @@
+/*
+ * Internal temperature sensor: ADC1 channel 18, factory calibrated (TS_CAL1/TS_CAL2 in OTP).
+ * Node `die_temp` is defined (disabled) in dts/arm/st/f7/stm32f7.dtsi, binding st,stm32-temp-cal.yaml.
+ * adc1 is already enabled by the board DTS (nucleo_f767zi.dts). REQ-1
+ */
+/ {
+	aliases {
+		die-temp0 = &die_temp;
+	};
+};
+
+&die_temp {
+	status = "okay";
+};

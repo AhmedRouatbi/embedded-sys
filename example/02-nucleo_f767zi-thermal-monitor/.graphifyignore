@@ -1,0 +1,9 @@
+deps/
+.west/
+.venv/
+build*/
+twister-out*/
+artifacts/
+
+# a tutorial for humans, not project knowledge (keeps the graph about the product)
+docs/WALKTHROUGH.md

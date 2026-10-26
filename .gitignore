@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.DS_Store
+# a project copied from example/ and set up in place by mistake
+example/*/deps/
+example/*/.west/
+example/*/build*/
+example/*/artifacts/
+example/*/graphify-out/cache/
+docs/

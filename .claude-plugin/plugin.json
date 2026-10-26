@@ -1,0 +1,15 @@
+{
+  "name": "embedded-sys",
+  "version": "1.0.0",
+  "description": "Agentic embedded firmware workflow (Zephyr, bare metal, FreeRTOS): Alt+A project profile menu, ponytail coding + review, graphify navigation, evidence-based verification, flash guard, firmware subagents.",
+  "author": { "name": "arouatbi" },
+  "license": "MIT",
+  "keywords": ["embedded", "firmware", "zephyr", "baremetal", "freertos", "misra", "safety"],
+  "agents": [
+    "./skills/embedded-sys/agents/fw-scout.md",
+    "./skills/embedded-sys/agents/fw-builder.md",
+    "./skills/embedded-sys/agents/fw-verifier.md",
+    "./skills/embedded-sys/agents/fw-reviewer.md",
+    "./skills/embedded-sys/agents/fw-safety.md"
+  ]
+}

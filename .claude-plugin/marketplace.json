@@ -1,0 +1,9 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "embsk",
+  "description": "embedded-sys: one merged skill for AI-driven embedded firmware development.",
+  "owner": { "name": "arouatbi" },
+  "plugins": [
+    { "name": "embedded-sys", "description": "Embedded firmware workflow: profile menu, spec→plan→build→verify→review, flash guard, subagents.", "source": "./", "category": "development" }
+  ]
+}

@@ -1,0 +1,6 @@
+build*/
+artifacts/*.txt
+graphify-out/cache/
+*.pem
+*.key
+.env

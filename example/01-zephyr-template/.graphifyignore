@@ -1,0 +1,6 @@
+deps/
+.west/
+.venv/
+build*/
+twister-out*/
+artifacts/

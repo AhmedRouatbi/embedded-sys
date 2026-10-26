@@ -1,0 +1,8 @@
+description: |
+  Simulated die-temperature sensor for the SIL build (native_sim only).
+  Implements the sensor API (SENSOR_CHAN_DIE_TEMP); the value and injected read errors are set
+  from the shell (`sim temp`, `sim fail`). Driver: src/sim/sim_devices.c.
+
+compatible: "vnd,sim-temp"
+
+include: base.yaml

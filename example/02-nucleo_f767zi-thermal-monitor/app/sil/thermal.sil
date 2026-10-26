@@ -1,0 +1,62 @@
+# SIL scenario: the real application on native_sim, simulated sensor / LEDs / button / watchdog.
+# Run it with the `sil` row of the AGENTS.md commands table (embsk verify runs it too):
+#   west build -b native_sim/native/64 -p auto -d build-sim app
+#   embsk uart --exec build-sim/zephyr/zephyr.exe --script app/sil/thermal.sil
+# Steps run in order; each `expect` waits for a line printed after the last `send`.
+# Evidence level: L2 (host). The same checks over the real UART are L4 (see docs/WALKTHROUGH.md §8).
+
+fail-on ASSERT|FATAL|watchdog expired|monitor start failed
+timeout 10
+
+# REQ-9: boot line with version and reset cause
+expect boot ok v0\.1\.0 reset=
+expect monitor running
+
+# REQ-5: B1 toggles the 1 Hz report line; the press bounces 3 times and must count once (debounce)
+send sim press
+expect report on
+expect thermal: t=25\.000C avg=25\.000C state=NORMAL
+send thermal status
+expect presses=1 report=on
+
+# REQ-4: exactly one LED, green in NORMAL
+send sim leds
+expect leds green=1 blue=0 red=0
+
+# REQ-3: NORMAL -> WARM at 45 °C
+send sim temp 50000
+expect state=WARM
+send sim leds
+expect leds green=0 blue=1 red=0
+
+# REQ-3/REQ-4: WARM -> HOT at 60 °C (red blinks, the others are off); then hysteresis: 59 °C is still HOT (leaves only below 58 °C)
+send sim temp 65000
+expect state=HOT
+send sim leds
+expect leds green=0 blue=0 red=[01]
+send sim temp 59000
+expect avg=59\.000C state=HOT
+send sim temp 57000
+expect avg=57\.000C state=WARM
+
+# REQ-7: implausible samples are rejected; 10 in a row -> FAULT (red steady); first valid one clears it
+send sim temp 130000
+expect FAULT: 10 bad samples in a row
+send sim leds
+expect leds green=0 blue=0 red=1
+send sim temp 25000
+expect FAULT cleared
+expect state=NORMAL
+
+# REQ-7: sensor read errors count the same way
+send sim fail 10
+expect FAULT: 10 bad samples in a row
+expect FAULT cleared
+
+# REQ-6: thresholds over the shell, invalid ones rejected
+send thermal thresholds 50000 40000
+expect rejected: need
+send thermal thresholds 30000 40000
+expect thresholds warm=30000 hot=40000 mC
+send thermal status
+expect warm=30000 hot=40000 mC

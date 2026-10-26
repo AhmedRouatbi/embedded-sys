@@ -1,0 +1,167 @@
+description: "Embedded firmware loop (embedded-sys skill): Plan → Execute (TDD, minimal code) → Verify (evidence ladder) → Review (fresh-context firmware review); failures loop back to Execute."
+maxTransitions: 12
+phases:
+  - id: plan
+    thinking: high
+    output:
+      type: text
+      description: "Markdown plan: tier, profile summary, files, ordered tasks with test + verify command each, risks, open questions."
+    tools: [read, find, ls, bash, delegate]
+    system: |
+      You are the planning phase of an embedded firmware workflow. Use the embedded-sys skill
+      (read its SKILL.md and only the references the task needs). Read-only: do not edit files,
+      do not flash, do not touch hardware.
+    prompt: |
+      Task:
+      {{input}}
+
+      1. Read the `embsk` block in AGENTS.md (or run `embsk get` + `embsk doctor`). If there is no
+         profile or doctor reports ERR, stop and output exactly what the user must choose (Alt+A).
+      2. Pick the tier (T0/T1/T2) per SKILL.md §1 and say why in one line.
+      3. Map: `graphify query/explain/affected` (fallback `rg`) to find the files and symbols involved;
+         for Zephyr DT/Kconfig questions grep docs/generated/ (run `embsk export build` only if a build exists).
+      4. Write the plan per references/spec-plan.md: requirements touched (REQ-n), design notes
+         (concurrency/DT/Kconfig), ordered vertical slices. Each task: files, the host test to write first,
+         the verify command from the AGENTS.md commands table, acceptance criteria.
+      5. Mark tasks that are parallel-safe (disjoint files).
+      Reply with the plan only.
+
+  - id: execute
+    thinking: medium
+    output:
+      type: text
+      description: |
+        Markdown execution report:
+        # Execution Report
+        ## Completed Tasks (task → files → test → result)
+        ## Commands Run (with PASS/FAIL)
+        ## Size Delta (flash/RAM)
+        ## Deviations From Plan
+        ## Skipped / Risks
+    system: |
+      You are the execution phase. Follow the embedded-sys skill: references/coding.md (ponytail
+      ladder; never cut validation, error paths, timeouts, watchdog, calibration, safety checks).
+      Never run flash/erase/option-byte/debug-load commands — the verify phase owns hardware and only
+      with explicit user approval stated in the task.
+    prompt: |
+      Original task:
+      {{input}}
+
+      Plan:
+      {{phase.plan.output}}
+
+      Verification feedback (if re-run after verify failed):
+      {{phase.verify.output?}}
+
+      Review feedback (if re-run after review failed):
+      {{phase.review.output?}}
+
+      Zephyr: if the west workspace is missing (no deps/zephyr) or the board/features changed, run
+      `embsk setup --no-build` first (it syncs the module allowlist and runs west init/update).
+      Exit 3 = the Zephyr SDK is not on PATH: stop and report the printed fix line; never install the SDK.
+      For each task in order: write the failing host test → smallest code that passes → run the
+      task's verify command → target build. Fix feedback items first if present. Keep the tree building
+      after every task. Commit only if the profile has autocommit on (message `<area>: <what> (REQ-n)`).
+      Parallel-safe tasks may be delegated with explicit file lists; otherwise work sequentially.
+
+  - id: verify
+    thinking: medium
+    output:
+      type: structured
+      status:
+        enum: [PASS, FAIL]
+        description: "PASS when the change reached the highest verification level the setup allows with clean evidence; FAIL when anything must be fixed."
+      report:
+        description: |
+          Markdown verification report:
+          # Verification Report
+          ## Level Reached (L1 build · L2 host tests · L3 static analysis · L4 on target · L5 HIL)
+          ## Evidence (command → PASS/FAIL → key output lines / artifacts path)
+          ## Anti-cheat check (no assert-free tests, no #ifdef TEST in production code, no skipped tests)
+          ## Failures Requiring Remediation (repro command, observed vs expected)
+          ## Not Verified (and why)
+      data:
+        description: "Machine-readable verification outcome."
+        fields:
+          level:
+            type: integer
+            description: "Highest verification level reached (1-5)."
+          hardwareTested:
+            type: boolean
+            description: "True only if the image ran on real hardware and the expected log line was found."
+    next:
+      - if:
+          status: FAIL
+        goto: execute
+      - if:
+          status: PASS
+        goto: review
+      - end: true
+    tools: [read, find, ls, bash]
+    system: |
+      You are the verification phase (embedded-sys references/testing-verification.md). Do not edit
+      source files; you may write artifacts/*.txt. Prove or disprove; never fix.
+    prompt: |
+      Original task:
+      {{input}}
+
+      Plan:
+      {{phase.plan.output}}
+
+      Execution report:
+      {{phase.execute.output}}
+
+      1. Run `embsk verify` (build + host tests + size) and read artifacts/verify.txt.
+      2. Run static analysis on changed files if available (cppcheck/clang-tidy per the skill); save to artifacts/sca.txt.
+      3. On-target (L4/L5) ONLY if the profile has hil=board AND the original task explicitly says flashing is
+         approved. Then: start log capture (AGENTS.md `log` command) → flash → grep the expected lines and
+         `<err>|ASSERT|FATAL` in artifacts/*.txt. Otherwise state "not run on target".
+      4. Check for cheats: tests without assertions, test-only branches in production code, skipped/deleted tests,
+         lowered thresholds.
+      5. PASS only if every executed level is clean.
+
+  - id: review
+    thinking: high
+    output:
+      type: structured
+      status:
+        enum: [PASS, FAIL]
+        description: "PASS when no Must-fix findings remain; FAIL otherwise."
+      report:
+        description: |
+          Review in the embedded-sys references/review.md format: `What this change does:`, numbered findings
+          (Must fix / Should fix / Nice to have, each with What this is / Problem / Fix / If we skip it),
+          Verdict, Lean, Not checked. Add a safety section when the profile has safety ≠ none.
+      data:
+        description: "Machine-readable review outcome."
+        fields:
+          mustFix:
+            type: integer
+            description: "Number of Must-fix findings."
+    next:
+      - if:
+          status: FAIL
+        goto: execute
+      - end: true
+    tools: [read, find, ls, bash, delegate]
+    system: |
+      You are the review phase: the firmware engineer paged when units brick in the field. Read-only.
+      Review the diff against the plan/spec only — not the execution narrative (fresh-context rule).
+    prompt: |
+      Original task:
+      {{input}}
+
+      Plan (contract):
+      {{phase.plan.output}}
+
+      Verification report:
+      {{phase.verify.output}}
+
+      1. `git diff` (uncommitted) or `git diff HEAD~N` for the commits made in this run; read connected code
+         (callers via `graphify affected` or `rg`, ISR/thread context, overlays/Kconfig, tests).
+      2. Apply references/review.md §2 in order: bug · hardware risk · concurrency & timing · resources ·
+         robustness/security · missing test · speed/size · lean. Every finding needs a concrete failing case.
+      3. If a delegate tool is available, also get an adversarial fresh-context pass (fw-reviewer card,
+         artifact + contract only) and reconcile; if profile safety ≠ none, add an fw-safety pass
+         (references/safety.md §Review).
+      4. FAIL if any Must-fix remains.

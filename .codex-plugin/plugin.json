@@ -1,0 +1,26 @@
+{
+  "name": "embedded-sys",
+  "version": "1.0.0",
+  "description": "Agentic embedded firmware workflow (Zephyr, bare metal, FreeRTOS): project profile, ponytail coding + review, graphify navigation, evidence-based verification, flash guard.",
+  "license": "MIT",
+  "keywords": [
+    "embedded",
+    "firmware",
+    "zephyr",
+    "baremetal"
+  ],
+  "hooks": "./hooks/hooks.json",
+  "interface": {
+    "displayName": "embedded-sys",
+    "shortDescription": "Embedded firmware workflow",
+    "longDescription": "Profile-driven embedded development: pick board/MCU/probe/safety level once, then spec, plan, build with minimal code, verify with evidence, review, document.",
+    "category": "Development",
+    "capabilities": [
+      "Lifecycle hooks"
+    ],
+    "defaultPrompt": [
+      "Use the embedded-sys skill to set up this firmware project.",
+      "Review this firmware diff with the embedded-sys review checklist."
+    ]
+  }
+}
