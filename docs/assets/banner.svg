@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 320" width="1280" height="320" role="img" aria-labelledby="t">
+  <title id="t">embedded-sys: one agent skill for MCU firmware on Zephyr, bare metal and FreeRTOS</title>
+  <defs>
+    <linearGradient id="die" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#14b8a6"/>
+      <stop offset="1" stop-color="#4f46e5"/>
+    </linearGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0d1117"/>
+      <stop offset="1" stop-color="#111a2e"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="320" rx="24" fill="url(#bg)"/>
+  <!-- faint PCB traces -->
+  <g stroke="#14b8a6" stroke-opacity="0.13" stroke-width="2" fill="none">
+    <path d="M900 0 V60 H1010 V130 H1280"/>
+    <path d="M1150 320 V240 H1210 V190 H1280"/>
+    <path d="M1180 0 V95 H1280"/>
+    <circle cx="1010" cy="130" r="5"/><circle cx="1210" cy="190" r="5"/><circle cx="1180" cy="95" r="5"/>
+  </g>
+  <!-- logo -->
+  <g transform="translate(52,52) scale(0.84)">
+    <g fill="#94a3b8">
+      <rect x="76" y="20" width="14" height="36" rx="4"/><rect x="104" y="20" width="14" height="36" rx="4"/>
+      <rect x="138" y="20" width="14" height="36" rx="4"/><rect x="166" y="20" width="14" height="36" rx="4"/>
+      <rect x="76" y="200" width="14" height="36" rx="4"/><rect x="104" y="200" width="14" height="36" rx="4"/>
+      <rect x="138" y="200" width="14" height="36" rx="4"/><rect x="166" y="200" width="14" height="36" rx="4"/>
+      <rect x="20" y="76" width="36" height="14" rx="4"/><rect x="20" y="104" width="36" height="14" rx="4"/>
+      <rect x="20" y="138" width="36" height="14" rx="4"/><rect x="20" y="166" width="36" height="14" rx="4"/>
+      <rect x="200" y="76" width="36" height="14" rx="4"/><rect x="200" y="104" width="36" height="14" rx="4"/>
+      <rect x="200" y="138" width="36" height="14" rx="4"/><rect x="200" y="166" width="36" height="14" rx="4"/>
+    </g>
+    <rect x="44" y="44" width="168" height="168" rx="26" fill="url(#die)"/>
+    <rect x="56" y="56" width="144" height="144" rx="18" fill="none" stroke="#ffffff" stroke-opacity="0.28" stroke-width="3"/>
+    <circle cx="74" cy="74" r="6" fill="#ffffff" fill-opacity="0.55"/>
+    <g stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <polyline points="82,170 112,146 144,154 174,96"/>
+      <line x1="112" y1="146" x2="118" y2="104" stroke-opacity="0.55" stroke-width="5"/>
+    </g>
+    <g fill="#ffffff">
+      <circle cx="82" cy="170" r="11"/><circle cx="112" cy="146" r="11"/><circle cx="144" cy="154" r="11"/>
+      <circle cx="118" cy="104" r="8" fill-opacity="0.75"/>
+    </g>
+    <circle cx="174" cy="96" r="15" fill="#f59e0b" stroke="#ffffff" stroke-width="5"/>
+  </g>
+  <!-- text -->
+  <g font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">
+    <text x="320" y="128" font-size="72" font-weight="700" fill="#f8fafc">embedded-sys</text>
+    <text x="322" y="176" font-size="26" fill="#cbd5e1">One agent skill for MCU firmware · Zephyr · bare metal · FreeRTOS</text>
+    <text x="322" y="222" font-size="21" fill="#5eead4" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, monospace">spec → plan → test-first build → verify on target → review</text>
+    <text x="322" y="262" font-size="17" fill="#8b949e">Claude Code · Codex · Pi · Cursor · Gemini CLI · Copilot · OpenCode — Linux · macOS · Windows</text>
+  </g>
+</svg>

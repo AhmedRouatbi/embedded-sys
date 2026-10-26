@@ -7,4 +7,4 @@ example/*/.west/
 example/*/build*/
 example/*/artifacts/
 example/*/graphify-out/cache/
-docs/
+docs/HANDOFF-PROMPT.md
